@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Long read about Web 3.0 and DeFi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- 
+    Шаблон: 
+    - Тёмная тема 
+    - Анимации при наведении
+    - Центрирование боковой и основной колонок
+    - Индикатор прогресса чтения 
+    - Изображения в lightbox по клику
+  -->
+
+    <style>
+      /* -------------------------------------------
+       СТИЛИ ОСНОВНЫЕ (темная тема + футуристические оттенки)
+       ------------------------------------------- */
+      :root {
+        --bg-color: #141414;
+        --text-color: #fff;
+        --accent-color: #01b7ff; /* яркий неоновый оттенок розового */
+        --sidebar-width: 250px;
+        --navbar-height: 60px;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Trebuchet MS", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        overflow-x: hidden; /* чтобы не было горизонтальной прокрутки */
+      }
+
+      a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      a:hover {
+        color: #fff;
+      }
+
+      /* -------------------------------------------
+       ОБЩИЙ КОНТЕЙНЕР ДЛЯ SIDEBAR И MAIN
+       ------------------------------------------- */
+      .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center; /* горизонтальное центрирование */
+        align-items: flex-start; /* выравнивание по верху (чтобы sidebar + main шли одинаково) */
+        gap: 1rem;
+        padding: 0 1rem; /* немного горизонтальных полей */
+      }
+
+      /* -------------------------------------------
+       НАВБАР
+       ------------------------------------------- */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--navbar-height);
+        background: linear-gradient(90deg, #1f1f1f, #2c2c2c);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        z-index: 9999;
+        border-bottom: 1px solid #333;
+      }
+
+      .navbar h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: var(--accent-color);
+        text-align: left; /* Выравнивание текста влево */
+        flex: 0 0 auto; /* Фиксированное положение слева */
+      }
+
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        justify-content: center; /* Центрирует ссылки */
+        flex: 1; /* Растягивает список на оставшееся пространство */
+        gap: 1rem;
+        margin: 0;
+        padding: 0;
+      }
+
+      .navbar li {
+        margin: 0;
+      }
+
+      .navbar a {
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+      .navbar a:hover {
+        color: #fff;
+      }
+
+      /* Заглушка под фиксированным navbar */
+      .spacer {
+        height: var(--navbar-height);
+      }
+
+      /* -------------------------------------------
+       БОКОВАЯ ПАНЕЛЬ (SIDEBAR)
+       ------------------------------------------- */
+      .sidebar {
+        position: sticky; /* будет «прилипать» при прокрутке */
+        top: calc(var(--navbar-height) + 1rem);
+        width: var(--sidebar-width);
+        background-color: #1c1c1c;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 1rem;
+        max-height: calc(100vh - 80px); /* чтобы влезала в экран */
+        overflow-y: auto; /* прокрутка, если слишком длинное содержание */
+        animation: fadeIn 0.8s ease forwards;
+      }
+
+      .sidebar h3 {
+        margin-top: 0;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--accent-color);
+        text-align: center;
+      }
+
+      .sidebar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar a {
+        color: var(--text-color);
+        text-decoration: none;
+        display: block;
+        padding: 0.3rem 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+      .sidebar a:hover {
+        background-color: #333;
+      }
+
+      /* -------------------------------------------
+       ОСНОВНОЙ КОНТЕНТ (MAIN)
+       ------------------------------------------- */
+      main {
+        max-width: 900px;
+        flex: 1; /* чтобы занимал всё доступное пространство */
+        text-align: center;
+        padding: 2rem 0;
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-weight: 600;
+      }
+
+      h1 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 2.2rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      h2 {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        color: var(--accent-color);
+        letter-spacing: 1px;
+      }
+      h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.7rem;
+        color: #fff;
+      }
+
+      p {
+        text-align: left;
+        margin-bottom: 1.2rem;
+        font-size: 1.1rem;
+        color: #ccc;
+        line-height: 1.8;
+      }
+
+      /* Video Container Styles */
+      .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        margin: 1.5rem auto; /* Centered with margin */
+        max-width: 900px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none; /* Remove iframe border */
+      }
+
+      /* Разделительная черта */
+      .section-separator {
+        margin: 2rem auto;
+        border-bottom: 1px dashed #444;
+        max-width: 400px;
+      }
+
+      /* -------------------------------------------
+       ИНДИКАТОР ПРОЧТЕНИЯ (READING PROGRESS)
+       ------------------------------------------- */
+      .reading-progress {
+        position: sticky;
+        margin-left: 4rem;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 200px;
+        background-color: #333;
+        border-radius: 5px;
+        z-index: 9999;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 0;
+        background-color: var(--accent-color);
+        border-radius: 5px;
+        transition: height 0.2s ease-out;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        top: 0; /* Привязка к верхней части индикатора */
+        right: calc(100% + 10px); /* Сместить немного вправо от прогресс-бара */
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        transform: translateY(-50%); /* Центровка текста по вертикали */
+        white-space: nowrap; /* Предотвращает перенос текста */
+        pointer-events: none; /* Текст не мешает взаимодействию */
+      }
+      /* -------------------------------------------
+       ФОТОГАЛЕРЕЯ (PHOTO GALLERY)
+       ------------------------------------------- */
+      .photo-gallery {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .photo-item {
+        flex: 1;
+        text-align: center;
+      }
+
+      .photo-item img {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+
+      .photo-item p {
+        text-align: center;
+        margin-top: 0.5rem;
+        font-size: 14px;
+        color: #666;
+      }
+
+      /* -------------------------------------------
+       КАРТИНКА (LIGHTBOX)
+       ------------------------------------------- */
+      .single-image {
+        margin: 1.5rem auto;
+        cursor: pointer; /* курсор "палец" */
+        display: inline-block;
+        position: relative;
+        transition: transform 0.3s ease;
+        border: 2px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .single-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .single-image:hover {
+        transform: scale(1.02);
+      }
+
+      /* FULLSCREEN OVERLAY - Lightbox */
+      .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: none; /* скрываем по умолчанию */
+        align-items: center;
+        justify-content: center;
+        z-index: 10000; /* над всеми элементами */
+      }
+      .lightbox-overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border: 2px solid var(--accent-color);
+        border-radius: 10px;
+        box-shadow: 0 0 20px var(--accent-color);
+      }
+      .lightbox-overlay.visible {
+        display: flex; /* показываем при видимости */
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      .author-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        background-color: #1f1f1f;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .author-photo img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%; /* Круглое фото */
+        object-fit: cover; /* Обеспечивает корректное масштабирование */
+        border: 2px solid var(--accent-color);
+      }
+
+      .author-details h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.5rem;
+        color: var(--accent-color);
+      }
+
+      .author-details p {
+        margin: 0 0 1rem 0;
+        color: #ccc;
+        font-size: 1rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      .social-link:hover {
+        color: #fff;
+      }
+
+      #heatmap-container {
+        margin: 1rem auto;
+        max-width: 100%;
+        text-align: center;
+      }
+
+      iframe {
+        width: 100%;
+        height: 500px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* -------------------------------------------
+       АНИМАЦИИ
+       ------------------------------------------- */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* -------------------------------------------
+       АДАПТИВНОСТЬ (MEDIQUERIES)
+       ------------------------------------------- */
+      @media (max-width: 992px) {
+        .container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .sidebar {
+          position: static; /* больше не фиксируем */
+          width: 100%;
+          max-width: 600px;
+          margin-bottom: 2rem;
+        }
+        main {
+          max-width: 600px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          justify-content: center;
+          flex-wrap: wrap;
+          height: auto;
+          padding: 0.5rem;
+        }
+        .navbar h2 {
+          font-size: 1.2rem;
+        }
+        .navbar ul {
+          gap: 0.5rem;
+        }
+        .reading-progress {
+          display: none; /* скрываем прогрессбар для мобильных, если не нужен */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Навигационная панель (NAVBAR) -->
+    <nav class="navbar">
+      <h2>IT-Technology</h2>
+      <ul>
+        <li><a href="#Introduction">Введение</a></li>
+        <li>
+          <a href="#Key-Directions-for-IT-Development-in-Web-3-0">Web 3.0</a>
+        </li>
+        <li>
+          <a href="#Detailed-Review-of-Decentralized-Finance-DeFi">DeFi</a>
+        </li>
+        <li><a href="#Conclusion-and-Key-Findings">Заключение</a></li>
+      </ul>
+    </nav>
+
+    <!-- Заглушка под navbar -->
+    <div class="spacer"></div>
+
+    <div class="container">
+      <!-- Боковая панель (SIDEBAR) -->
+      <aside class="sidebar">
+        <h3 style="font-size: 1.5rem">Содержание</h3>
+        <ul>
+          <li>
+            <a href="#Introduction" style="font-size: 1.2rem">Введение</a>
+          </li>
+          <ul style="list-style-type: none; padding-left: 20px">
+            <li>
+              <a href="#Digital-Economy-and-the-Role-of-IT"
+                >Цифровая экономика и роль ИТ</a
+              >
+            </li>
+            <li>
+              <a href="#Industry-4-0-and-Advanced-IT"
+                >Концепция «Индустрия 4.0» и перспективные ИТ</a
+              >
+            </li>
+            <li>
+              <a href="#Web-3-0-and-Key-Technological-Trends"
+                >Концепция «Web 3.0» и ключевые технологические тренды</a
+              >
+            </li>
+          </ul>
+          <li>
+            <a
+              href="#Key-Directions-for-IT-Development-in-Web-3-0"
+              style="font-size: 1.2rem"
+              >Web 3.0</a
+            >
+          </li>
+          <ul style="list-style-type: none; padding-left: 20px">
+            <li>
+              <a href="#Overview-and-Current-State-of-Web-3-0"
+                >Общий обзор концепции «Web 3.0» и текущее состояние её
+                развития</a
+              >
+            </li>
+          </ul>
+          <li>
+            <a
+              href="#Detailed-Review-of-Decentralized-Finance-DeFi"
+              style="font-size: 1.2rem"
+              >DeFi</a
+            >
+          </li>
+          <ul style="list-style-type: none; padding-left: 20px">
+            <li>
+              <a href="#Impact-of-DeFi-on-Banking-and-Exchanges"
+                >Влияние DeFi на банковскую отрасль и биржи</a
+              >
+            </li>
+          </ul>
+          <li>
+            <a href="#Conclusion-and-Key-Findings" style="font-size: 1.2rem"
+              >Заключение</a
+            >
+          </li>
+          <ul style="list-style-type: none; padding-left: 20px">
+            <li>
+              <a href="#Role-of-Blockchain-and-Smart-Contracts"
+                >Роль блокчейн и смарт-контрактов</a
+              >
+            </li>
+            <li>
+              <a href="#Decentralized-Applications-dApps"
+                >Децентрализованные приложения (dApps)</a
+              >
+            </li>
+            <li>
+              <a href="#Benefits-and-Challenges-of-DeFi"
+                >Преимущества и вызовы DeFi</a
+              >
+            </li>
+            <li>
+              <a href="#Future-Outlook-and-Recommendations"
+                >Перспективы и рекомендации</a
+              >
+            </li>
+          </ul>
+        </ul>
+      </aside>
+
+      <!-- Основной контент (MAIN) -->
+      <main>
+        <article>
+          <h1 id="Introduction">Введение</h1>
+          <p>
+            В технологическом контексте ИТ продолжают развиваться с невероятной
+            скоростью. Появляются новые протоколы передачи данных, увеличивается
+            пропускная способность сетей, совершенствуются алгоритмы обработки
+            информации. Технологии искусственного интеллекта, машинного обучения
+            и больших данных становятся все более доступными и интегрируются в
+            различные отрасли. В социальном контексте ИТ влияют на коммуникацию,
+            образование, здравоохранение и другие сферы. Социальные сети,
+            мессенджеры и платформы для совместной работы изменили способы
+            взаимодействия между людьми. Удаленная работа и онлайн-образование
+            стали нормой, особенно в свете глобальных событий последних лет.
+          </p>
+
+          <h3 id="Development-of-artificial-intelligence-and-machine-learning">
+            Развитие искусственного интеллекта и машинного обучения
+          </h3>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://inclient.ru/wp-content/uploads/2024/05/razmer-mezhdunarodnogo-rynka-iskustvennogo-intellekta-2021-2030.jpg')"
+          >
+            <img
+              src="https://inclient.ru/wp-content/uploads/2024/05/razmer-mezhdunarodnogo-rynka-iskustvennogo-intellekta-2021-2030.jpg"
+              alt="Рост рынка ИИ"
+            />
+          </div>
+          <p>
+            Искусственный интеллект (ИИ) и машинное обучение (МО) становятся
+            ключевыми драйверами технологического прогресса. Компании активно
+            внедряют ИИ для автоматизации рутинных задач, улучшения качества
+            обслуживания клиентов и создания новых продуктов. Примеры включают
+            чат-боты, системы распознавания речи и автономные транспортные
+            средства. Для подробного понимания рынка ИИ можно посмотреть статью
+            <a href="https://inclient.ru/ai-stats/" target="_blank">Инклиент</a>
+            в которой подробно описана статистика роста рынка ИИ в мире.
+          </p>
+          <h2 id="Digital-Economy-and-the-Role-of-IT">
+            Цифровая экономика и роль ИТ
+          </h2>
+          <p>
+            Концепция цифровой экономики подразумевает интеграцию цифровых
+            технологий во все аспекты экономической деятельности. Тренды на
+            цифровизацию охватывают важнейшие процессы, включая финансовые
+            операции, управление цепочками поставок и государственное
+            администрирование.
+          </p>
+          <div id="heatmap-container">
+            <iframe src="heatmap.html" frameborder="0"></iframe>
+          </div>
+
+          <p>
+            Роль ИТ в цифровой экономике является фундаментальной. Они
+            предоставляют инфраструктуру для сбора, передачи и анализа данных,
+            способствуют автоматизации процессов и повышению их эффективности.
+            Современная цифровая экономика невозможна без развитых ИТ-систем.
+          </p>
+
+          <h3 id="E-commerce-and-Fintech">Электронная коммерция и финтех</h3>
+          <p>
+            Электронная коммерция (e-commerce) и финансовые технологии (финтех)
+            играют ключевую роль в цифровой экономике. Они предоставляют
+            возможность потребителям и бизнесу совершать транзакции и управлять
+            финансами онлайн. Такие платформы, как
+            <a href="https://www.amazon.com/" target="_blank">Amazon</a> и
+            <a href="https://www.alibaba.com/" target="_blank">Alibaba</a>,
+            трансформировали подходы к покупкам и продажам, а финтех-компании,
+            такие как
+            <a href="https://www.paypal.com/" target="_blank">PayPal</a> и
+            <a href="https://stripe.com/" target="_blank">Stripe</a>, предлагают
+            инновационные финансовые решения, включая безопасные платежи,
+            кредитование и управление активами.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://ecomhub.ru/wp-content/uploads/2020/07/data-insight-2018-2024-prognoz-1.jpg')"
+          >
+            <img
+              src="https://ecomhub.ru/wp-content/uploads/2020/07/data-insight-2018-2024-prognoz-1.jpg"
+              alt="Рост электронной коммерции и финтеха"
+            />
+          </div>
+
+          <h3 id="Blockchain-and-its-Applications-in-Economy">
+            Блокчейн и его применение в экономике
+          </h3>
+          <p>
+            Технология блокчейн обеспечивает прозрачность, безопасность и
+            неизменяемость данных благодаря распределенному реестру. Ее
+            применение в экономике выходит за рамки криптовалют. Например,
+            проект
+            <a
+              href="https://www.ibm.com/blockchain/solutions/food-trust"
+              target="_blank"
+              >IBM Food Trust</a
+            >
+            позволяет отслеживать происхождение продуктов питания на всех этапах
+            цепочки поставок, гарантируя качество и безопасность.
+          </p>
+          <p>
+            Кроме того, блокчейн обеспечивает быстрые и дешевые международные
+            платежи, используя такие криптовалюты, как Биткойн и Ethereum. Это
+            снижает стоимость транзакций и ускоряет их обработку.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://store.bankiros.ru/source/1/4i4ecKwRKHV_WRpj8vbc3iVZHjOzib9H.png')"
+          >
+            <img
+              src="https://store.bankiros.ru/source/1/4i4ecKwRKHV_WRpj8vbc3iVZHjOzib9H.png"
+              alt="Применение блокчейна в экономике"
+            />
+          </div>
+
+          <h2 id="Industry-4-0-and-Advanced-IT">
+            Концепция «Индустрия 4.0» и перспективные ИТ
+          </h2>
+          <p>
+            «Индустрия 4.0» представляет собой четвертую промышленную революцию,
+            которая основана на интеграции киберфизических систем, Интернета
+            вещей (IoT) и искусственного интеллекта в производственные процессы.
+            Основная цель этой концепции — создание умных фабрик, где системы
+            способны автономно обмениваться данными, контролировать свои
+            процессы и принимать решения в реальном времени.
+          </p>
+
+          <h3 id="Internet-of-Things">Интернет вещей (IoT)</h3>
+          <p>
+            Интернет вещей (IoT) объединяет устройства и сенсоры, обеспечивая
+            обмен данными между ними. Эта технология формирует умные города,
+            умные дома и умные предприятия. Применение IoT повышает
+            энергоэффективность, улучшает безопасность и открывает новые
+            бизнес-возможности. Примером служит проект
+            <a
+              href="https://www.cisco.com/c/en/us/solutions/internet-of-things/overview.html"
+              target="_blank"
+              >Cisco IoT</a
+            >, который предоставляет решения для промышленности и городских
+            инфраструктур.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://controleng.ru/wp-content/uploads/04_IoT_01-3.jpg')"
+          >
+            <img
+              src="https://controleng.ru/wp-content/uploads/04_IoT_01-3.jpg"
+              alt="Применение IoT в промышленности"
+            />
+          </div>
+
+          <h3 id="Big-Data-and-Analytics">Большие данные и аналитика</h3>
+          <p>
+            Анализ больших данных позволяет обрабатывать огромные объемы
+            информации для принятия точных решений. В промышленности это
+            используется для оптимизации процессов, прогнозирования отказов
+            оборудования и улучшения качества продукции. Примером является
+            внедрение аналитики для управления запасами и прогнозирования
+            спроса, что снижает затраты и минимизирует отходы.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://platformv.sbertech.ru/_next/image?url=%2Fapi%2Fmedia%3Fid%3DSnimok_ekrana_2024_07_17_v_16_48_26_a064c9ebc8.png&w=1280&q=75')"
+          >
+            <img
+              src="https://platformv.sbertech.ru/_next/image?url=%2Fapi%2Fmedia%3Fid%3DSnimok_ekrana_2024_07_17_v_16_48_26_a064c9ebc8.png&w=1280&q=75"
+              alt="Аналитика больших данных"
+            />
+          </div>
+
+          <h3 id="Artificial-Intelligence-and-Machine-Learning">
+            Искусственный интеллект и машинное обучение
+          </h3>
+          <p>
+            Искусственный интеллект и машинное обучение играют ключевую роль в
+            автоматизации и оптимизации процессов. В промышленности это включает
+            создание интеллектуальных роботов для выполнения сложных задач и
+            использование алгоритмов машинного обучения для анализа данных и
+            принятия решений. Примером является разработка
+            <a href="https://www.bostondynamics.com/" target="_blank"
+              >роботов Boston Dynamics</a
+            >, которые могут адаптироваться к изменяющимся условиям в реальном
+            времени.
+          </p>
+
+          <h3 id="Augmented-and-Virtual-Reality">
+            Дополненная и виртуальная реальность
+          </h3>
+          <p>
+            Дополненная и виртуальная реальность (AR/VR) активно используются
+            для обучения и моделирования в промышленности. Это позволяет
+            инженерам и техникам тестировать оборудование и процессы в
+            виртуальной среде, что значительно сокращает время и затраты на
+            разработку новых продуктов. Примером является
+            <a href="https://www.microsoft.com/en-us/hololens" target="_blank"
+              >Microsoft HoloLens</a
+            >, которая используется для моделирования промышленных операций.
+          </p>
+          <!-- Блок для вставки видео -->
+          <div class="video-container">
+            <iframe
+              src="https://www.youtube.com/embed/2Q01bNEzxb4"
+              title="YouTube video player"
+              frameborder="0"
+              gesture="media"
+              allow="autoplay; encrypted-media"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+          <div class="video-placeholder">
+            <a
+              href="https://rutube.ru/video/b4b1c9924aec6da8833412e4bd990591/?r=wd"
+              target="_blank"
+              style="color: var(--accent-color); text-decoration: none"
+            >
+              Нажмите здесь, чтобы посмотреть видео на Rutube
+            </a>
+          </div>
+          <h2 id="Web-3-0-and-Key-Technological-Trends">
+            Концепция «Web 3.0» и ключевые технологические тренды
+          </h2>
+          <p>
+            «Web 3.0» представляет собой следующую фазу эволюции Интернета,
+            направленную на создание децентрализованной и более интеллектуальной
+            сети. Основные технологические тренды включают блокчейн,
+            семантический веб, децентрализованные приложения, финансы и
+            токенизацию.
+          </p>
+
+          <h3 id="Blockchain-and-Decentralization">
+            Блокчейн и децентрализация
+          </h3>
+          <p>
+            Блокчейн и децентрализация создают распределенные сети, которые не
+            зависят от центральных управляющих органов. Это обеспечивает
+            прозрачность, безопасность и конфиденциальность данных. Примеры
+            применения включают управление цифровыми активами, создание
+            децентрализованных автономных организаций (DAO) и улучшение цепочек
+            поставок. Подробнее о технологиях блокчейна можно узнать в
+            <a href="https://ethereum.org/en/" target="_blank">Ethereum</a>.
+          </p>
+
+          <h3 id="Semantic-Web">Семантический веб</h3>
+          <p>
+            Семантический веб позволяет машинам лучше интерпретировать и
+            анализировать данные. Это открывает возможности для создания
+            интеллектуальных приложений, таких как поисковые системы нового
+            поколения и рекомендательные системы. Например, технологии
+            семантического анализа используются в
+            <a href="https://www.w3.org/standards/semanticweb/" target="_blank"
+              >платформе W3C</a
+            >.
+          </p>
+
+          <h3 id="Decentralized-Applications">
+            Децентрализованные приложения (dApps)
+          </h3>
+          <p>
+            Децентрализованные приложения (dApps) работают на блокчейне и
+            обеспечивают пользователям полный контроль над своими данными. Эти
+            приложения используются для финансовых сервисов, игр, социальных
+            сетей и других областей. Примеры dApps включают
+            <a href="https://uniswap.org/" target="_blank">Uniswap</a> и
+            <a href="https://opensea.io/" target="_blank">OpenSea</a>.
+          </p>
+
+          <h3 id="Decentralized-Finance">Децентрализованные финансы (DeFi)</h3>
+          <p>
+            DeFi предоставляет финансовые услуги без участия традиционных
+            посредников. Пользователи могут управлять своими финансами через
+            смарт-контракты, избегая банковских комиссий и задержек. Примеры
+            DeFi включают платформы для кредитования, такие как
+            <a href="https://aave.com/" target="_blank">Aave</a>, и
+            децентрализованные биржи, такие как
+            <a href="https://sushi.com/" target="_blank">SushiSwap</a>.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://i.imgur.com/MHYhSZH.png')"
+          >
+            <img src="https://i.imgur.com/MHYhSZH.png" alt="Особенности DeFi" />
+          </div>
+
+          <h3 id="Tokenization-and-NFT">Токенизация и NFT</h3>
+          <p>
+            Токенизация и NFT позволяют создавать уникальные цифровые активы,
+            которые могут представлять собой ценность, права собственности или
+            редкие предметы искусства. Примеры включают использование NFT на
+            платформах, таких как
+            <a href="https://opensea.io/" target="_blank">OpenSea</a>, для
+            продажи цифрового искусства, музыки и игровых предметов. NFT
+            трансформируют рынок собственности, создавая новые формы монетизации
+            контента.
+          </p>
+          <div class="photo-gallery">
+            <div
+              class="photo-item"
+              onclick="openLightbox('https://leonardo.osnova.io/22a8971e-2fba-5750-bf8c-ae61d2345752')"
+            >
+              <img
+                src="https://leonardo.osnova.io/22a8971e-2fba-5750-bf8c-ae61d2345752"
+                alt="Коллекция Bored Ape"
+              />
+              <p>Коллекция Bored Ape</p>
+            </div>
+            <div
+              class="photo-item"
+              onclick="openLightbox('https://leonardo.osnova.io/bb3052b0-46f8-5fa6-9ffa-d9ff2ead30c1')"
+            >
+              <img
+                src="https://leonardo.osnova.io/bb3052b0-46f8-5fa6-9ffa-d9ff2ead30c1"
+                alt="Коллекция Mutant Ape"
+              />
+              <p>Коллекция Mutant Ape</p>
+            </div>
+            <div
+              class="photo-item"
+              onclick="openLightbox('https://leonardo.osnova.io/5415df4e-c4f1-5a8e-9089-84b1b34b9f01')"
+            >
+              <img
+                src="https://leonardo.osnova.io/5415df4e-c4f1-5a8e-9089-84b1b34b9f01"
+                alt="Pirate Monkey"
+              />
+              <p>Pirate Monkey</p>
+            </div>
+          </div>
+
+          <p>
+            Развитие «Web 3.0» обещает сделать Интернет более безопасным,
+            приватным и контролируемым пользователями, предоставляя новые
+            возможности для бизнеса и взаимодействия в сети.
+          </p>
+
+          <h1 id="Key-Directions-for-IT-Development-in-Web-3-0">
+            Ключевые направления развития ИТ в концепции «Web 3.0»
+          </h1>
+          <p>
+            Концепция «Web 3.0» представляет собой новую фазу эволюции
+            Интернета, направленную на создание децентрализованной, более
+            интеллектуальной и ориентированной на пользователей сети. В отличие
+            от предыдущих версий, где контроль над данными и сервисами был
+            сосредоточен в руках крупных организаций, «Web 3.0» стремится
+            передать контроль непосредственно пользователям, обеспечивая при
+            этом высокую степень прозрачности и безопасности операций.
+          </p>
+          <p>
+            Основные технологии, такие как децентрализация, блокчейн и
+            распределённые реестры, играют ключевую роль в формировании новой
+            структуры Интернета. Эти подходы направлены на создание экосистемы,
+            где пользователи владеют своими данными и активами.
+          </p>
+
+          <h2 id="Overview-and-Current-State-of-Web-3-0">
+            Общий обзор концепции «Web 3.0» и текущее состояние её развития
+          </h2>
+          <p>
+            В основе «Web 3.0» лежит принцип децентрализации, достигаемый с
+            помощью блокчейна и распределённых реестров. В отличие от предыдущих
+            версий Интернета, где крупные корпорации концентрировали контроль
+            над данными, новая концепция позволяет пользователям становиться
+            полноценными владельцами своих данных и активов. Это достигается
+            благодаря прозрачным и безопасным транзакциям, обеспечиваемым
+            распределёнными сетями.
+          </p>
+          <p>
+            Сегодня «Web 3.0» демонстрирует активное развитие. Такие
+            блокчейн-платформы, как
+            <a href="https://ethereum.org/en/" target="_blank">Ethereum</a>,
+            <a href="https://polkadot.network/" target="_blank">Polkadot</a> и
+            <a href="https://solana.com/" target="_blank">Solana</a>,
+            предоставляют инфраструктуру для разработки децентрализованных
+            приложений (dApps). Децентрализованные финансы (DeFi) продолжают
+            привлекать значительные инвестиции, предоставляя пользователям
+            альтернативы традиционным финансовым услугам.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://i.imgur.com/tnnz0oo.jpeg')"
+          >
+            <img
+              src="https://i.imgur.com/tnnz0oo.jpeg"
+              alt="Инфраструктура Web 3.0"
+            />
+          </div>
+          <div style="text-align: center">Инфраструктура Web 3.0</div>
+          <p>
+            Значительное влияние на развитие Web 3.0 оказывает рынок
+            <a href="https://opensea.io/" target="_blank">NFT</a>, который
+            получил распространение в цифровом искусстве, играх и
+            коллекционировании. Интеграция таких передовых технологий, как
+            искусственный интеллект (AI) и Интернет вещей (IoT), дополнительно
+            расширяет возможности Web 3.0, делая взаимодействие с сетью более
+            интеллектуальным и автоматизированным.
+          </p>
+
+          <h3 id="Challenges-and-Limitations-of-Web-3-0">
+            Проблемы и ограничения концепции «Web 3.0»
+          </h3>
+          <p>
+            Несмотря на значительный прогресс, Web 3.0 всё ещё находится на
+            ранних стадиях развития. Ключевые проблемы включают:
+          </p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Масштабируемость:</strong> Существующие блокчейн-платформы
+              сталкиваются с ограничениями по количеству транзакций в секунду.
+            </li>
+            <li>
+              <strong>Удобство использования:</strong> Технологии Web 3.0 часто
+              требуют высокой технической грамотности от пользователей.
+            </li>
+            <li>
+              <strong>Правовое регулирование:</strong> Отсутствие глобальных
+              стандартов создаёт неопределённость для пользователей и
+              разработчиков.
+            </li>
+          </ul>
+          <p>
+            Решение этих проблем является ключевым шагом на пути к массовому
+            внедрению Web 3.0, которое обещает революционизировать
+            взаимодействие с Интернетом и предоставить пользователям больше
+            свободы и контроля.
+          </p>
+
+          <h2 id="Detailed-Review-of-Decentralized-Finance-DeFi">
+            Подробное рассмотрение децентрализованных финансов (DeFi)
+          </h2>
+          <p>
+            Принцип работы децентрализованных финансов (DeFi) основан на
+            использовании смарт-контрактов, которые автоматизируют выполнение
+            различных финансовых операций без участия посредников. Это
+            обеспечивает безопасность и прозрачность, так как операции
+            выполняются в строгом соответствии с заранее установленными
+            правилами. DeFi использует децентрализованные протоколы и открытые
+            стандарты, позволяя любому пользователю с доступом к Интернету
+            подключаться и взаимодействовать с этими сервисами.
+          </p>
+          <p>
+            Одной из ключевых характеристик DeFi является интероперабельность —
+            различные приложения могут интегрироваться друг с другом, формируя
+            экосистему взаимосвязанных финансовых сервисов.
+          </p>
+
+          <h3 id="Core-Components-of-DeFi">
+            Основные компоненты экосистемы DeFi
+          </h3>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Децентрализованные биржи (DEX):</strong> Платформы, такие
+              как <a href="https://uniswap.org/" target="_blank">Uniswap</a> и
+              <a href="https://sushi.com/" target="_blank">SushiSwap</a>,
+              позволяют пользователям обменивать криптоактивы напрямую без
+              посредников.
+            </li>
+            <li>
+              <strong>Протоколы кредитования и заимствования:</strong>
+              <a href="https://aave.com/" target="_blank">Aave</a> и
+              <a href="https://compound.finance/" target="_blank">Compound</a>
+              дают пользователям возможность предоставлять криптоактивы для
+              займов другим или брать займы под залог.
+            </li>
+            <li>
+              <strong>Стейблкоины:</strong> Токены, такие как DAI и USDC,
+              обеспечивают стабильность цен, привязываясь к фиатным валютам или
+              другим активам.
+            </li>
+            <li>
+              <strong>Деривативы и синтетические активы:</strong> Платформы
+              вроде
+              <a href="https://synthetix.io/" target="_blank">Synthetix</a>
+              позволяют хеджировать риски или инвестировать в активы без их
+              прямого владения.
+            </li>
+            <li>
+              <strong>Протоколы управления активами:</strong>
+              <a href="https://yearn.finance/" target="_blank">Yearn Finance</a>
+              предоставляет инструменты для оптимизации управления инвестициями.
+            </li>
+          </ul>
+
+          <h3 id="Advantages-of-DeFi">Преимущества DeFi</h3>
+          <p>Основные преимущества DeFi включают:</p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Доступность:</strong> Любой человек с подключением к
+              Интернету может воспользоваться финансовыми услугами, независимо
+              от географического положения или социального статуса.
+            </li>
+            <li>
+              <strong>Прозрачность:</strong> Все транзакции и смарт-контракты
+              доступны для проверки, что снижает риск мошенничества.
+            </li>
+            <li>
+              <strong>Снижение издержек:</strong> Отсутствие посредников
+              позволяет уменьшить комиссии и издержки.
+            </li>
+            <li>
+              <strong>Инновации:</strong> Открытая экосистема стимулирует
+              разработку новых продуктов и услуг.
+            </li>
+          </ul>
+
+          <h3 id="Challenges-and-Risks-in-DeFi">Риски и вызовы в DeFi</h3>
+          <p>
+            Несмотря на свои преимущества, DeFi сталкивается с рядом проблем:
+          </p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Технические уязвимости:</strong> Смарт-контракты могут
+              содержать ошибки, что делает их уязвимыми к взлому.
+            </li>
+            <li>
+              <strong>Регулятивная неопределённость:</strong> Отсутствие четких
+              законодательных рамок создаёт юридические риски.
+            </li>
+            <li>
+              <strong>Волатильность рынков:</strong> Резкие изменения цен
+              криптовалют могут повлиять на стабильность протоколов.
+            </li>
+            <li>
+              <strong>Масштабируемость:</strong> Ограничения блокчейн-сетей
+              могут вызывать высокие комиссии и задержки.
+            </li>
+          </ul>
+
+          <h3 id="Future-of-DeFi">Будущее DeFi</h3>
+          <p>
+            На 2024 год DeFi привлек значительное внимание как индивидуальных
+            пользователей, так и институциональных инвесторов. Общая стоимость
+            заблокированных средств в DeFi-протоколах (TVL) составляет десятки
+            миллиардов долларов. Примеры, такие как
+            <a href="https://aave.com/" target="_blank">Aave</a>, показывают,
+            как пользователи могут депонировать криптоактивы, получать проценты
+            и брать займы с использованием смарт-контрактов. Такие гибридные
+            решения, как интеграция DeFi с традиционными финансовыми
+            институтами, становятся важным направлением развития отрасли.
+          </p>
+          <p>
+            В будущем DeFi обещает изменить финансовую индустрию, обеспечивая
+            доступ к финансовым услугам для всех и стимулируя инновации.
+            Традиционные учреждения вынуждены адаптироваться к этим изменениям,
+            создавая гибридные подходы для удовлетворения потребностей
+            пользователей.
+          </p>
+
+          <h1 id="Key-Areas-of-IT-Applications-in-Web-3-0">
+            Основные области применения ИТ в концепции «Web 3.0»
+          </h1>
+
+          <h2 id="Decentralized-Finance-DeFi">
+            Децентрализованные финансы (DeFi)
+          </h2>
+          <p>
+            Децентрализованные финансы (DeFi) стали одним из самых перспективных
+            направлений в рамках концепции «Web 3.0». Они предлагают радикально
+            новые подходы к банковским операциям и биржевой торговле, устраняя
+            необходимость в традиционных посредниках, таких как банки и
+            финансовые учреждения. В этом разделе рассмотрим применение DeFi в
+            банковской сфере и на биржах, текущее состояние этих секторов и
+            влияние децентрализованных финансов на их дальнейшее развитие.
+          </p>
+
+          <h2 id="Modern-Banking-System">Современная банковская система</h2>
+          <!-- Блок для вставки видео -->
+          <div class="video-container">
+            <iframe
+              src="https://www.youtube.com/embed/OyokCk5y7wU"
+              title="YouTube video player"
+              frameborder="0"
+              gesture="media"
+              allow="autoplay; encrypted-media"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+          <div class="video-placeholder">
+            <a
+              href="https://rutube.ru/video/takovonet/"
+              target="_blank"
+              style="color: var(--accent-color); text-decoration: none"
+            >
+              Нажмите здесь, чтобы понять что на Rutube таково нет
+            </a>
+          </div>
+          <p>
+            Современная банковская система представляет собой централизованную
+            структуру, где банки выступают основными посредниками в финансовых
+            операциях. Они контролируют предоставление таких услуг, как кредиты,
+            депозиты и платежи. Однако эта система сталкивается с рядом проблем:
+          </p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Ограниченный доступ:</strong> Около 1,7 миллиарда человек
+              в мире не имеют доступа к банковским услугам.
+            </li>
+            <li>
+              <strong>Высокие комиссии:</strong> Особенно на трансграничные
+              платежи, которые увеличивают стоимость услуг для пользователей.
+            </li>
+            <li>
+              <strong>Медленные операции:</strong> Некоторые операции, такие как
+              международные переводы, могут занимать несколько дней.
+            </li>
+            <li>
+              <strong>Отсутствие прозрачности:</strong> Управление средствами
+              часто вызывает недоверие у клиентов.
+            </li>
+          </ul>
+
+          <h2 id="DeFi-Applications-in-Banking">
+            Приложения DeFi в банковской сфере
+          </h2>
+          <p>
+            DeFi предлагает новый подход к финансовым услугам, используя
+            блокчейн и смарт-контракты. Эти технологии позволяют пользователям
+            участвовать в финансовых операциях без посредников.
+          </p>
+          <h3 id="Lending-and-Borrowing">Кредитование и заимствование</h3>
+          <p>
+            Платформы, такие как
+            <a href="https://aave.com/" target="_blank">Aave</a> и
+            <a href="https://compound.finance/" target="_blank">Compound</a>,
+            позволяют пользователям выдавать и брать займы напрямую, минуя
+            банки. Это обеспечивает доступность финансовых услуг с более низкими
+            ставками и минимальными комиссиями.
+          </p>
+
+          <h3 id="Payment-Systems-and-Remittances">
+            Платежные системы и трансграничные переводы
+          </h3>
+          <p>
+            DeFi делает возможными мгновенные и дешёвые трансграничные переводы
+            без географических ограничений. Например, стейблкоины, такие как
+            USDC и DAI, используются для безопасных и стабильных транзакций.
+          </p>
+
+          <h3 id="Decentralized-Insurance">Децентрализованное страхование</h3>
+          <p>
+            Протоколы, такие как Nexus Mutual, предоставляют децентрализованные
+            решения для страхования, защищая пользователей от рисков, связанных
+            с волатильностью рынка или техническими проблемами смарт-контрактов.
+          </p>
+
+          <h3 id="Accessibility-and-Transparency">
+            Доступность и прозрачность
+          </h3>
+          <p>
+            DeFi расширяет доступ к финансовым услугам для пользователей, у
+            которых нет доступа к традиционным банкам. Кроме того, отсутствие
+            посредников снижает комиссии и делает операции прозрачными. Пример:
+            платформа
+            <a href="https://makerdao.com/" target="_blank">MakerDAO</a>,
+            которая позволяет выпускать стейблкоины DAI под залог криптоактивов,
+            делая кредиты более доступными.
+          </p>
+          <p>
+            Сервисы, такие как
+            <a href="https://celsius.network/" target="_blank"
+              >Celsius Network</a
+            >, предлагают высокие проценты на депозиты криптовалют и низкие
+            ставки по займам, что делает их привлекательными для пользователей.
+          </p>
+
+          <div
+            class="single-image"
+            onclick="openLightbox('https://i.imgur.com/w1lgI6G.png')"
+          >
+            <img
+              src="https://i.imgur.com/w1lgI6G.png"
+              alt="Приложения DeFi в банковской сфере"
+            />
+          </div>
+          <div style="text-align: center">
+            Приложения DeFi в банковской сфере
+          </div>
+          <p>
+            DeFi имеет потенциал изменить финансовую отрасль, предлагая
+            доступные, прозрачные и инновационные решения для управления
+            капиталом и проведения транзакций.
+          </p>
+
+          <h2 id="Traditional-Exchanges">Традиционные биржи</h2>
+          <p>
+            Традиционные биржи функционируют как централизованные торговые
+            площадки, где финансовые инструменты покупаются и продаются
+            пользователями. Эти биржи строго регулируются государственными
+            органами и требуют соблюдения процедур верификации (KYC). Однако
+            такая централизация делает биржи уязвимыми к взломам и манипуляциям.
+            Многие пользователи сталкиваются с ограничениями доступа, так как не
+            все могут зарегистрироваться на международных биржах. Прозрачность
+            информации о торговых процессах часто недостаточна, что может
+            снижать доверие участников рынка.
+          </p>
+
+          <h2 id="Decentralized-Exchanges-DEX">
+            Децентрализованные биржи (DEX)
+          </h2>
+          <p>
+            Децентрализованные биржи (DEX) предлагают новую модель торговли
+            криптоактивами, устраняя посредников. На DEX пользователи могут
+            обменивать активы напрямую друг с другом, сохраняя контроль над
+            своими средствами. Прозрачность торговых операций гарантируется
+            благодаря записи всех транзакций в блокчейн, что делает их
+            доступными для проверки. Отсутствие барьеров для верификации
+            личности расширяет доступность платформ для пользователей по всему
+            миру.
+          </p>
+          <p>
+            Безопасность является одним из ключевых преимуществ DEX, так как
+            средства не хранятся на платформе, что минимизирует риск взломов.
+            Примеры успешных децентрализованных бирж включают:
+          </p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <a href="https://uniswap.org/" target="_blank">Uniswap</a>:
+              Использует протокол автоматических маркет-мейкеров (AMM) для
+              обмена токенами Ethereum.
+            </li>
+            <li>
+              <a href="https://sushi.com/" target="_blank">SushiSwap</a>:
+              Предоставляет функции фермерства ликвидности и стейкинга для
+              дополнительного заработка.
+            </li>
+          </ul>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://i.imgur.com/x3kr6CY.png')"
+          >
+            <img
+              src="https://i.imgur.com/x3kr6CY.png"
+              alt="Децентрализованные биржи"
+            />
+          </div>
+          <div style="text-align: center">Децентрализованные биржи</div>
+
+          <h2 id="Impact-of-DeFi-on-Banking-and-Exchanges">
+            Влияние DeFi на банковскую отрасль и биржи
+          </h2>
+          <p>
+            На конец 2024 года децентрализованные финансы (DeFi) стали одним из
+            самых быстрорастущих секторов в криптоиндустрии. Общая стоимость
+            заблокированных средств в DeFi-протоколах (Total Value Locked, TVL)
+            превысила 100 миллиардов долларов, что свидетельствует о высоком
+            доверии со стороны пользователей.
+          </p>
+          <p>
+            Миллионы людей активно используют DeFi для управления своими
+            средствами, что способствует росту числа пользователей.
+            Институциональные инвесторы также начинают проявлять интерес к DeFi,
+            вкладывая средства в новые проекты и исследуя возможности интеграции
+            децентрализованных технологий в свои бизнес-модели.
+          </p>
+          <p>
+            Однако, несмотря на этот рост, DeFi сталкивается с рядом вызовов:
+          </p>
+          <ul style="text-align: left; font-size: 1rem">
+            <li>
+              <strong>Регулятивная неопределенность:</strong> Отсутствие чётких
+              законов затрудняет развитие сектора.
+            </li>
+            <li>
+              <strong>Технические уязвимости:</strong> Ошибки в смарт-контрактах
+              могут приводить к потерям средств.
+            </li>
+            <li>
+              <strong>Масштабируемость:</strong> Высокие комиссии и медленная
+              обработка транзакций на некоторых блокчейнах остаются проблемами.
+            </li>
+          </ul>
+          <p>
+            DeFi уже оказывает значительное влияние на банковскую сферу и биржи,
+            создавая новые финансовые инструменты и предлагая пользователям
+            доступные и прозрачные способы управления средствами. В дальнейшем
+            можно ожидать усиления интеграции DeFi-технологий в традиционные
+            финансовые системы, что приведёт к созданию гибридных моделей и
+            дальнейшему росту цифровой экономики.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://cryptodose.net/wp-content/uploads/2022/06/3-1-768x614.jpg')"
+          >
+            <img
+              src="https://cryptodose.net/wp-content/uploads/2022/06/3-1-768x614.jpg"
+              alt="Влияние DeFi на финансы"
+            />
+          </div>
+          <div style="text-align: center">Влияние DeFi на финансы</div>
+          <h1 id="Conclusion-and-Key-Findings">
+            Заключение и основные выводы по работе
+          </h1>
+          <p>
+            Современные информационно-коммуникационные технологии (ИКТ) играют
+            ключевую роль в трансформации финансовой отрасли. Концепция «Web
+            3.0», с её акцентом на децентрализацию и усиление контроля
+            пользователей над своими данными, стала катализатором значительных
+            изменений в банковском деле и биржевой деятельности.
+            Децентрализованные финансы (DeFi) предлагают альтернативу
+            традиционным финансовым услугам, создавая новые возможности для
+            инвестиций и управления капиталом.
+          </p>
+
+          <h2 id="Role-of-Blockchain-and-Smart-Contracts">
+            Роль блокчейн и смарт-контрактов
+          </h2>
+          <p>
+            Блокчейн-технология является основой для DeFi и многих других
+            приложений «Web 3.0». Она обеспечивает неизменность, прозрачность и
+            безопасность данных, что критически важно для финансовых операций. В
+            банковской сфере блокчейн позволяет проводить транзакции напрямую
+            между участниками без посредников, сокращая время и издержки. На
+            биржах блокчейн обеспечивает прозрачность торговых операций и
+            предотвращает мошенничество, повышая доверие участников рынка.
+          </p>
+          <p>
+            Смарт-контракты автоматизируют выполнение соглашений между
+            сторонами, что позволяет создавать сложные финансовые инструменты и
+            сервисы, такие как кредитование, страхование и деривативы. В
+            банковском деле это открывает новые возможности для продуктовой
+            линейки, а на биржах обеспечивает быстрое и эффективное исполнение
+            сделок.
+          </p>
+
+          <h2 id="Decentralized-Applications-dApps">
+            Децентрализованные приложения (dApps)
+          </h2>
+          <p>
+            Децентрализованные приложения предоставляют пользователям прямой
+            доступ к финансовым сервисам через интуитивно понятные интерфейсы.
+            Они снижают барьеры входа и расширяют доступ к финансовым
+            инструментам для широкой аудитории. В банковском деле dApps могут
+            заменить традиционные банковские приложения, предоставляя услуги по
+            управлению счетами, платежам и инвестициям. На биржах они позволяют
+            торговать без посредников и с полным контролем над активами.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://i.imgur.com/AWNvU7A.jpeg')"
+          >
+            <img
+              src="https://i.imgur.com/AWNvU7A.jpeg"
+              alt="Применение dApps в финансовой сфере"
+            />
+          </div>
+          <div style="text-align: center">
+            Популярные dApps в финансовой сфере
+          </div>
+          <h2 id="Benefits-and-Challenges-of-DeFi">
+            Преимущества и вызовы DeFi
+          </h2>
+          <p>
+            DeFi представляет собой значительный шаг вперед в развитии
+            финансовой индустрии. Они предлагают:
+          </p>
+          <ul style="text-align: left; font-size: 1.1rem">
+            <li>
+              Прозрачность операций благодаря записям в блокчейне, доступным для
+              проверки.
+            </li>
+            <li>
+              Глобальную доступность услуг, независимо от географического
+              положения пользователей.
+            </li>
+            <li>
+              Снижение издержек и ускорение операций за счет устранения
+              посредников.
+            </li>
+            <li>
+              Создание новых финансовых продуктов, отвечающих требованиям
+              цифровой экономики.
+            </li>
+          </ul>
+          <p>
+            Однако DeFi сталкивается с вызовами, включая регулятивную
+            неопределенность, технические риски, такие как уязвимости
+            смарт-контрактов, и проблемы масштабируемости блокчейн-сетей.
+          </p>
+
+          <h2 id="Future-Outlook-and-Recommendations">
+            Перспективы и рекомендации
+          </h2>
+          <p>
+            Интеграция передовых технологий, таких как блокчейн, смарт-контракты
+            и децентрализованные приложения, является ключом к трансформации
+            банковского дела и бирж. Эти технологии повышают эффективность и
+            доступность финансовых услуг, способствуют созданию более
+            справедливой и инклюзивной финансовой системы.
+          </p>
+          <p>
+            Для успешного внедрения и развития этих технологий требуется
+            сотрудничество между разработчиками, финансовыми институтами и
+            регуляторами. Это обеспечит защиту интересов пользователей,
+            стимулирует инновации и создаст благоприятные условия для
+            дальнейшего развития цифровой экономики.
+          </p>
+          <div
+            class="single-image"
+            onclick="openLightbox('https://blogct.creative-tim.com/blog/content/images/size/w1000/2022/06/web-1-vs-web-2-vs-web-3.jpg')"
+          >
+            <img
+              src="https://blogct.creative-tim.com/blog/content/images/size/w1000/2022/06/web-1-vs-web-2-vs-web-3.jpg"
+              alt="Перспективы DeFi и Web 3.0"
+            />
+          </div>
+          <div style="text-align: center">Перспективы DeFi и Web 3.0</div>
+          <p>
+            В перспективе продолжение интеграции DeFi и других технологий «Web
+            3.0» приведет к созданию новых бизнес-моделей, стимулирует
+            экономический рост и повысит качество жизни людей по всему миру.
+          </p>
+
+          <h2>Полезные материалы и исследования</h2>
+          <p>
+            В данном разделе собраны полезные материалы и исследования,
+            посвящённые ключевым направлениям, рассмотренным в тексте, включая
+            Web 3.0, блокчейн, DeFi, искусственный интеллект и
+            децентрализованные приложения.
+          </p>
+          <ol style="text-align: left; font-size: 1.1rem">
+            <li>
+              <strong>Цифровая экономика:</strong>
+              <a
+                href="https://pa-journal.igsu.ru/articles/7774/"
+                target="_blank"
+              >
+                Цифровая экономика в Российской Федерации. Проблемы и
+                перспективы развития.
+              </a>
+              В статье рассматриваются достоинства цифровой экономики, ее
+              влияние на производительность труда и конкурентоспособность
+              компаний, а также основные проблемы и перспективы цифровизации в
+              России.
+            </li>
+            <li>
+              <strong>Индустрия 4.0:</strong>
+              <a href="https://moluch.ru/archive/398/88080/" target="_blank">
+                Индустрия 4.0: понятие и основные технологии.
+              </a>
+              В статье анализируется концепция Индустрии 4.0, ее основные
+              характеристики и технологии, такие как Интернет вещей,
+              искусственный интеллект и большие данные.
+            </li>
+            <li>
+              <strong>Web 3.0 и децентрализованные финансы (DeFi):</strong>
+              <a href="https://arxiv.org/abs/2405.10678" target="_blank">
+                IT Strategic alignment in the decentralized finance (DeFi): CBDC
+                and digital currencies.
+              </a>
+              Исследование посвящено стратегическому выравниванию ИТ в
+              децентрализованных финансах, рассматривая взаимодействие между
+              различными цифровыми валютами и роль информационных технологий в
+              этом процессе.
+            </li>
+            <li>
+              <strong>Искусственный интеллект в промышленности:</strong>
+              <a href="https://habr.com/ru/articles/534518/" target="_blank">
+                Цифровая индустрия: непрерывная оптимизация процессов.
+              </a>
+              Статья описывает влияние искусственного интеллекта и цифровых
+              технологий на оптимизацию бизнес-процессов в различных отраслях
+              промышленности.
+            </li>
+            <li>
+              <strong>Big Data и цифровизация экономики:</strong>
+              <a href="https://habr.com/ru/articles/507822/" target="_blank">
+                Индустрия 4.0: Big Data, цифровизация и рост экономики.
+              </a>
+              В статье рассматривается влияние технологий больших данных и
+              цифровизации на экономический рост в контексте четвертой
+              промышленной революции.
+            </li>
+          </ol>
+
+          <!-- Блок об авторе -->
+          <div class="author-info">
+            <div class="author-photo">
+              <img src="https://i.imgur.com/kwoRFvg.jpeg" alt="Фото автора" />
+            </div>
+            <div class="author-details">
+              <h3>Матвеев Сергей ИДМ-24-08</h3>
+              <p>
+                Данный проект посвящен лабораторной работе по предмету "Интернет
+                Технологии"
+              </p>
+              <div class="social-links">
+                <a
+                  href="https://t.me/Maksaa85m"
+                  target="_blank"
+                  class="social-link"
+                  >Telegram</a
+                >
+                <a
+                  href="https://github.com/DeadLiner85"
+                  target="_blank"
+                  class="social-link"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+          </div>
+        </article>
+      </main>
+      <!-- Индикатор прогресса чтения -->
+      <div class="reading-progress">
+        <div class="progress-bar"></div>
+        <div class="progress-percentage">0%</div>
+      </div>
+    </div>
+
+    <!-- FULLSCREEN OVERLAY (для отображения изображений) -->
+    <div
+      class="lightbox-overlay"
+      id="lightboxOverlay"
+      onclick="closeLightbox()"
+    >
+      <img id="lightboxImage" src="" alt="Fullscreen Image" />
+    </div>
+
+    <!-- JS для прогресс-бара и lightbox -->
+    <script>
+      /* Индикатор прогресса чтения */
+      const progressBar = document.querySelector(".progress-bar");
+      const progressPercentage = document.querySelector(".progress-percentage");
+
+      function updateProgress() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollRatio = scrollHeight ? scrollTop / scrollHeight : 0;
+        const percentage = Math.min(Math.round(scrollRatio * 100), 100); // Ограничение до 100%
+
+        progressBar.style.height = percentage + "%";
+        if (percentage === 100) {
+          progressPercentage.textContent = "Прочитано!";
+          progressPercentage.style.right = "-35px";
+          progressPercentage.style.top = `calc(${percentage}% + 15px)`; // Привязка текста к прогрессу
+        } else {
+          progressPercentage.textContent = percentage + "%"; // Обновляем текст процентов
+          progressPercentage.style.right = "calc(100% + 10px)";
+          progressPercentage.style.top = `calc(${percentage}% - 10px)`; // Привязка текста к прогрессу
+        }
+      }
+
+      window.addEventListener("scroll", updateProgress);
+      document.addEventListener("DOMContentLoaded", updateProgress);
+
+      /* Функции для раскрытия/закрытия изображений (lightbox) */
+      const lightboxOverlay = document.getElementById("lightboxOverlay");
+      const lightboxImage = document.getElementById("lightboxImage");
+
+      function openLightbox(imageSrc) {
+        lightboxImage.src = imageSrc;
+        lightboxOverlay.classList.add("visible");
+      }
+
+      function closeLightbox() {
+        lightboxOverlay.classList.remove("visible");
+        lightboxImage.src = "";
+      }
+    </script>
+  </body>
+</html>
